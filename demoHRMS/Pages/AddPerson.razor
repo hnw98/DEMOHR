@@ -1,0 +1,70 @@
+﻿@page "/addPerson"
+@inject Business.AppState appState
+@using demoHRMS.Models
+@inject demoHRMS.Business.ServicesVM service
+@inject NavigationManager UriHelp
+
+
+
+
+<form @onsubmit="Save">
+    <h2>Add employee</h2>
+    <div class="login">
+        <label> Name </label>
+        <input type="text" @bind="employee.FirstName" name="name" /><br />
+        <label>Last Name</label>
+        <input type="text" @bind="employee.LastName" name="lname" /><br />
+        <label>CIN</label>
+        <input type="text" @bind="employee.Cin" name="email" /><br />
+        <label> Department </label>
+        <input type="text" @bind="employee.Department" name="name" /><br />
+
+        <input type="submit" name="name" />
+
+
+
+    </div>
+
+</form>
+<button class="btn btn-primary" @onclick="Cancel"> Cancel</button>
+
+@code {
+
+    public Employee employee { get; set; }
+    public bool isToSave { get; set; }
+
+
+    void Save()
+    {
+        if (isToSave == false)
+        {
+            service.UpdatePerson(employee);
+        }
+        else
+        {
+            service.SavePerson(employee);
+        }
+
+        UriHelp.NavigateTo("dashboard", true);
+    }
+    protected override void OnInitialized()
+    {
+        if (appState.employee != null)
+        {
+            employee = appState.employee;
+            isToSave = false;
+        }
+        else
+        {
+            employee = new Employee();
+            isToSave = true;
+        }
+    }
+
+    void Cancel()
+    {
+        UriHelp.NavigateTo("dashboard", true);
+    }
+}
+
+}

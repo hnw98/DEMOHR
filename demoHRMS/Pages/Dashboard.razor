@@ -1,0 +1,75 @@
+﻿@page "/dashboard"
+@using demoHRMS.Models
+@using demoHRMS.Data
+@using demoHRMS.Business
+@inject Business.AppState appstate
+@inject Business.ServicesVM service
+@inject NavigationManager UriHelp
+
+
+<h3>Dashboard</h3>
+<button @onclick="AddPerson" class="btn btn-primary" style="background-color:black">Add employee</button>
+<b />
+<b />
+<b />
+<b />
+<b />
+<button  @onclick="DeletePerson" class="btn btn-primary" style="background-color:darkred">Delete</button>
+
+<button class="btn btn-primary" @onclick="EditPerson"> Edit</button>
+<br />
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>CIN</th>
+            <th>Department</th>
+
+        </tr>
+    </thead>
+   
+    <tbody>
+        @foreach (var employee in employees)
+        {
+            <tr>
+                <td>@employee.FirstName </td>
+                <td>@employee.Cin</td>
+                <td>@employee.Department</td>
+                <td><input type="checkbox" @onchange="(() => ToggleToDo(employee))" /></td>
+            </tr>
+        }
+    </tbody>
+    
+</table>
+@code {
+
+    private List<Employee> employees;
+    protected override async Task OnInitializedAsync()
+    {
+        employees = await service.GetEmployeeList();
+    }
+    void AddPerson()
+    {
+        UriHelp.NavigateTo("addPerson", true);
+    }
+
+    void DeletePerson()
+    {
+        service.DeletePerson(selectedPerson);
+        UriHelp.NavigateTo("dashboard", true);
+
+    }
+    void EditPerson()
+    {
+        UriHelp.NavigateTo("addPerson", true);
+    }
+
+    public Employee selectedPerson { get; set; }
+
+    void ToggleToDo(Employee person)
+    {
+        selectedPerson = person;
+        appstate.employee = person;
+    }
+
+}

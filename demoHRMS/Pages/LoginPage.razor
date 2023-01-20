@@ -1,0 +1,40 @@
+﻿@using demoHRMS.Models
+@using demoHRMS.Data
+@inject Business.AppState appState
+@inject demoHRMS.Business.ServicesVM service
+@layout LoginLayout
+@inject NavigationManager UriHelp
+@page "/"
+
+<form @onsubmit="LoginEmployee">
+    <div class="logincss">
+        <h3>Login</h3>
+        <img src="https://cdn-icons-png.flaticon.com/512/6681/6681204.png" alt="" /><br />
+        <label> Username</label>
+        <input id="Text1" type="text" @bind="hr.Hrusername"/><br />
+        <label> Password</label>
+        <input id="Password1" type="password" @bind="hr.Hrpassword"/><br />
+        <p>@message</p>
+        <input id="Submit1" type="submit" value="submit" />
+    </div>
+</form>
+@code {
+
+    Hr hr = new Hr();
+    public string message { get; set; }
+
+    void LoginEmployee()
+    {
+        bool ok = service.Login(hr);
+        if (ok)
+        {
+            UriHelp.NavigateTo("dashboard");
+        }
+        else
+        {
+            message = "Wrong email or password. Try again";
+
+        }
+    }
+
+}
